@@ -6,7 +6,8 @@ module.exports = {
     'eslint:recommended'
   ],
   env: {
-    'vue/setup-compiler-macros': true
+    'vue/setup-compiler-macros': true,
+    node: true
   },
   rules: {
     'quote-props': [2, 'as-needed'],
