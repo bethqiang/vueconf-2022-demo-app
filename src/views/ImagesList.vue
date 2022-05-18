@@ -2,12 +2,25 @@
 import { reactive, onMounted } from 'vue';
 import imagesApi from '@/api/images';
 
+// API paging is zero-based but pagination component is one-based, so that's why there's some funky math going on
+
+const PAGE_SIZE = 10;
+
 const state = reactive({
-  images: []
+  images: [],
+  count: 0,
+  currentPage: 1
 });
 
+const INITIAL_PARAMS = {
+  limit: PAGE_SIZE,
+  order: 'asc'
+};
+
 onMounted(async () => {
-  state.images = await imagesApi.findAll();
+  const response = await imagesApi.findAll({ ...INITIAL_PARAMS, page: 0 });
+  state.images = response.data;
+  state.count = response.count;
 });
 
 function formatBreeds (breeds) {
@@ -36,12 +49,18 @@ function voted (include_vote) {
     return 'Not Voted';
   }
 }
+
+async function handlePageChange ({ page }) {
+  state.currentPage = page;
+  const response = await imagesApi.findAll({ ...INITIAL_PARAMS, page: state.currentPage - 1 });
+  state.images = response.data;
+}
 </script>
 
 <template>
   <h1 class="mb-12">All Images</h1>
   <LobTable
-    class="min-w-full border-b border-gray-100 divide-y divide-gray-100"
+    class="min-w-full border-b border-gray-100 divide-y divide-gray-100 mb-8"
     space="md"
   >
     <TableHeader class="text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
@@ -87,4 +106,12 @@ function voted (include_vote) {
       </template>
     </TableBody>
   </LobTable>
+  <Pagination
+    v-if="state.images.length"
+    :collection="state.images"
+    :page="state.currentPage"
+    :limit="PAGE_SIZE"
+    :total="Number(state.count)"
+    @change="handlePageChange"
+  />
 </template>

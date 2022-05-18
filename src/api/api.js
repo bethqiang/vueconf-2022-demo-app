@@ -14,6 +14,11 @@ export default {
   get: function (url, params = {}) {
     const headers = getHeaders();
     return _api.get(url, { params, headers })
-      .then(({ data }) => data);
+      .then((response) => {
+        return {
+          data: response.data,
+          count: response.headers['pagination-count']
+        };
+      });
   }
 };
