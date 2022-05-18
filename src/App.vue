@@ -1,17 +1,13 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router';
+import { RouterView } from 'vue-router';
+import NavMain from '@/components/NavMain.vue';
 </script>
 
 <template>
-  <header>
-    <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/images">All Images</RouterLink>
-      <RouterLink to="/about">About</RouterLink>
-    </nav>
-  </header>
-
-  <main>
-    <RouterView />
-  </main>
+  <div class="flex flex-nowrap h-screen">
+    <NavMain class="basis-56 grow-0" />
+    <main class="basis-0 grow m-8">
+      <RouterView />
+    </main>
+  </div>
 </template>

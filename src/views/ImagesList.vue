@@ -39,7 +39,7 @@ function voted (include_vote) {
 </script>
 
 <template>
-  <h1>All Images</h1>
+  <h1 class="mb-12">All Images</h1>
   <LobTable
     class="min-w-full border-b border-gray-100 divide-y divide-gray-100"
     space="md"
