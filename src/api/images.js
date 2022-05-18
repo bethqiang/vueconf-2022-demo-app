@@ -4,7 +4,9 @@ const IMAGES_ROOT = 'images';
 
 export default {
   findAll: async function (payload) {
-    const response = await api.get(`${IMAGES_ROOT}/search`, payload);
-    return response;
+    return await api.get(`${IMAGES_ROOT}/search`, payload);
+  },
+  findById: async function (id) {
+    return await api.get(`${IMAGES_ROOT}/${id}`);
   }
 };

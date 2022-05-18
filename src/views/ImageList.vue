@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, onMounted } from 'vue';
 import imagesApi from '@/api/images';
+import { formatBreeds } from '@/utils';
 
 // API paging is zero-based but pagination component is one-based, so that's why there's some funky math going on
 
@@ -23,30 +24,11 @@ onMounted(async () => {
   state.count = response.count;
 });
 
-function formatBreeds (breeds) {
-  if (breeds.length) {
-    const breedsArr = breeds.map(({ name }) => name);
-    return breedsArr.join(', ');
-  } else {
-    return 'Unknown';
-  }
-}
-
 function favorited (include_favorite) {
   if (include_favorite === 1) {
     return 'Favorited';
   } else {
     return 'Not Favorited';
-  }
-}
-
-function voted (include_vote) {
-  if (include_vote === 1) {
-    return 'Liked';
-  } else if (include_vote === 0) {
-    return 'Disliked';
-  } else {
-    return 'Not Voted';
   }
 }
 
