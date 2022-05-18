@@ -12,7 +12,7 @@ const router = createRouter({
     {
       path: '/images',
       name: 'images',
-      component: () => import('../views/ImagesView.vue')
+      component: () => import('../views/ImagesList.vue')
     },
     {
       path: '/about',
