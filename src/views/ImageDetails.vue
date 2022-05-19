@@ -21,11 +21,11 @@ const favorite = computed(() => {
   return state.image?.include_favorite === 1;
 });
 
-const liked = computed(() => {
+const upvoted = computed(() => {
   return state.image?.include_vote === 1;
 });
 
-const disliked = computed(() => {
+const downvoted = computed(() => {
   return state.image?.include_vote === 0;
 });
 </script>
@@ -67,13 +67,13 @@ const disliked = computed(() => {
       >
         <div class="flex items-center">
           <LobButton
-            :variant="liked ? 'success' : 'secondary'"
+            :variant="upvoted ? 'success' : 'secondary'"
             size="small"
           >
             <Check class="w-6 h-6"/>
           </LobButton>
           <LobButton
-            :variant="disliked ? 'error' : 'secondary'"
+            :variant="downvoted ? 'error' : 'secondary'"
             size="small"
             class="ml-2"
           >

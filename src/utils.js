@@ -9,9 +9,9 @@ export function formatBreeds (breeds) {
 
 export function voted (include_vote) {
   if (include_vote === 1) {
-    return 'Liked';
+    return 'Upvoted';
   } else if (include_vote === 0) {
-    return 'Disliked';
+    return 'Downvoted';
   } else {
     return 'Not Voted';
   }
