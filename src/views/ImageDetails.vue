@@ -62,10 +62,10 @@ function handleDownvote () {
       :src="state.image.url"
       class="h-96"
     />
-    <Card class="w-96 mt-8">
+    <Card class="w-[500px] mt-8">
       <DetailsRow
         label="Breeds"
-        label-class="text-gray-500 font-medium text-left text-sm my-3"
+        label-class="text-gray-500 font-medium text-left text-sm my-2"
       >
         <span class="text-sm">
           {{ formatBreeds(state.image.breeds) }}
@@ -76,13 +76,13 @@ function handleDownvote () {
         label-class="text-gray-500 font-medium text-left text-sm"
       >
         <div class="flex items-center">
-          <LobButton
+          <NewButton
             variant="secondary"
-            size="small"
+            small
             @click="handleFavorite"
           >
             <Heart :class="['w-6 h-6', { 'text-coral-500': favorite }]"/>
-          </LobButton>
+          </NewButton>
           <span class="text-sm ml-2">{{ favorite ? 'Favorited' : 'Not Favorited' }}</span>
         </div>
       </DetailsRow>
@@ -91,21 +91,21 @@ function handleDownvote () {
         label-class="text-gray-500 font-medium text-left text-sm"
       >
         <div class="flex items-center">
-          <LobButton
+          <NewButton
             :variant="upvoted ? 'success' : 'secondary'"
-            size="small"
+            small
             @click="handleUpvote"
           >
             <Check class="w-6 h-6"/>
-          </LobButton>
-          <LobButton
+          </NewButton>
+          <NewButton
             :variant="downvoted ? 'error' : 'secondary'"
-            size="small"
+            small
             class="ml-2"
             @click="handleDownvote"
           >
             <Close class="w-6 h-6"/>
-          </LobButton>
+          </NewButton>
           <span class="text-sm ml-2">
             {{ voted() }}
           </span>
