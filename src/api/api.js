@@ -20,5 +20,16 @@ export default {
           count: response.headers['pagination-count']
         };
       });
+  },
+  post: function (url, params) {
+    const headers = getHeaders();
+
+    // We don't want to send a destructured version of FormData
+    let data = { ...params };
+    if (params instanceof FormData) {
+      data = params;
+    }
+
+    return _api.post(url, data, { headers });
   }
 };

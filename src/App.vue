@@ -1,6 +1,23 @@
 <script setup>
+import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
 import NavMain from '@/components/NavMain.vue';
+import favoritesApi from '@/api/favorites';
+import votesApi from '@/api/votes';
+import useFavoritesStore from '@/stores/favorites';
+import useVotesStore from '@/stores/votes';
+
+const favoritesStore = useFavoritesStore();
+const votesStore = useVotesStore();
+
+onMounted(async () => {
+  const [favorites, votes] = await Promise.all([
+    favoritesApi.findAll(),
+    votesApi.findAll()
+  ]);
+  favoritesStore.set(favorites.data);
+  votesStore.set(votes.data);
+});
 </script>
 
 <template>

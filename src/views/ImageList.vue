@@ -1,11 +1,14 @@
 <script setup>
 import { reactive, onMounted } from 'vue';
 import imagesApi from '@/api/images';
-import { formatBreeds } from '@/utils';
+import { useRouter } from 'vue-router';
+import { formatBreeds, voted } from '@/utils';
 
 // API paging is zero-based but pagination component is one-based, so that's why there's some funky math going on
 
 const PAGE_SIZE = 10;
+
+const router = useRouter();
 
 const state = reactive({
   images: [],
@@ -23,6 +26,10 @@ onMounted(async () => {
   state.images = response.data;
   state.count = response.count;
 });
+
+function goToDetails (id) {
+  router.push(`/images/${id}`);
+}
 
 function favorited (include_favorite) {
   if (include_favorite === 1) {
@@ -64,7 +71,10 @@ async function handlePageChange ({ page }) {
         v-for="image in state.images"
         :key="image.id"
       >
-        <TableRow class="hover:shadow rounded-md cursor-pointer border-b-white-300 border-b last:border-0 hover:text-black text-sm">
+        <TableRow
+          class="hover:shadow rounded-md cursor-pointer border-b-white-300 border-b last:border-0 hover:text-black text-sm"
+          @click="goToDetails(image.id)"
+        >
           <div>
             <img :src="image.url" class="h-20" />
           </div>
