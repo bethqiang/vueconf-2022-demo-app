@@ -1,3 +1,10 @@
+<script setup>
+defineProps({
+  label: { type: String, required: true },
+  labelClass: { type: String, default: '' }
+});
+</script>
+
 <template>
   <div class="grid grid-cols-6 mb-2 items-center">
     <div
@@ -14,19 +21,3 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'DetailsRow',
-  props: {
-    label: {
-      type: String,
-      required: true
-    },
-    labelClass: {
-      type: String,
-      default: ''
-    }
-  }
-};
-</script>
