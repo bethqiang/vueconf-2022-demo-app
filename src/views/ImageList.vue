@@ -2,7 +2,7 @@
 import { reactive, onMounted } from 'vue';
 import imagesApi from '@/api/images';
 import { useRouter } from 'vue-router';
-import { formatBreeds, hasVoted } from '@/utils';
+import { formatBreeds } from '@/utils';
 
 // API paging is zero-based but pagination component is one-based, so that's why there's some funky math going on
 
@@ -31,14 +31,6 @@ function goToDetails (id) {
   router.push(`/images/${id}`);
 }
 
-function favorited (include_favorite) {
-  if (include_favorite === 1) {
-    return 'Favorited';
-  } else {
-    return 'Not Favorited';
-  }
-}
-
 async function handlePageChange ({ page }) {
   state.currentPage = page;
   const response = await imagesApi.findAll({ ...INITIAL_PARAMS, page: state.currentPage - 1 });
@@ -59,12 +51,6 @@ async function handlePageChange ({ page }) {
       <div>
         Breed
       </div>
-      <div>
-        Favorited
-      </div>
-      <div>
-        Voted
-      </div>
     </TableHeader>
     <TableBody>
       <template
@@ -80,14 +66,6 @@ async function handlePageChange ({ page }) {
           </div>
           <div class="max-w-xs py-2 truncate fs-exclude">
             {{ formatBreeds(image.breeds) }}
-          </div>
-          <div
-            class="py-2 fs-exclude"
-          >
-            {{ favorited(image.include_favorite) }}
-          </div>
-          <div class="py-2">
-            {{ hasVoted(image.include_vote) }}
           </div>
           <div class="flex justify-end py-2">
             <ChevronRight

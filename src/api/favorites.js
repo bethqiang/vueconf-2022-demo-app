@@ -8,5 +8,8 @@ export default {
   },
   favorite: async function (payload) {
     return await api.post(FAVORITES_ROOT, payload);
+  },
+  delete: async function (favoriteId) {
+    return await api.delete(`${FAVORITES_ROOT}/${favoriteId}`);
   }
 };

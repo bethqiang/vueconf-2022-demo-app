@@ -31,5 +31,9 @@ export default {
     }
 
     return _api.post(url, data, { headers });
-  }
+  },
+  delete: function (url) {
+    const headers = getHeaders('DEL', url);
+    return _api.delete(url, { headers });
+  },
 };

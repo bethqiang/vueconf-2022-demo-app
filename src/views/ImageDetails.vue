@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router';
 import imagesApi from '@/api/images';
 import favoritesApi from '@/api/favorites';
 import votesApi from '@/api/votes';
-import { formatBreeds, hasVoted } from '@/utils';
+import { formatBreeds } from '@/utils';
 import DetailsRow from '@/components/DetailsRow.vue';
 import useFavoritesStore from '@/stores/favorites';
 import useVotesStore from '@/stores/votes';
@@ -21,7 +21,7 @@ const state = reactive({
 const route = useRoute();
 
 function formatVote () {
-  // every vote is stored (rather than overridden), so only get your most recent one
+  // every vote is an entry (rather than the previous entry being overridden), so only get your most recent one
   const votes = votesStore.votes.filter(({ image_id }) => image_id === state.image.id);
   const mostRecentVote = votes[votes.length - 1];
   if (mostRecentVote.value === 1 || mostRecentVote.value === 0) {
@@ -31,8 +31,17 @@ function formatVote () {
   }
 }
 
+function hasVoted (vote) {
+  if (vote === 1) {
+    return 'Upvoted';
+  } else if (vote === 0) {
+    return 'Downvoted';
+  } else {
+    return 'Not Voted';
+  }
+}
+
 function isFavorited () {
-  // I think this could be a computed value
   return favoritesStore.favorites.find(({ image_id }) => image_id === state.image.id);
 }
 
@@ -47,12 +56,17 @@ onMounted(async () => {
 async function handleFavorite () {
   const favorited = isFavorited();
   if (favorited) {
-    // todo: delete
+    // it's possible to have multiple favorite entries on the same photo... so that's fun...
+    const favorites = favoritesStore.favorites.filter(({ image_id }) => image_id === state.image.id);
+    const allFavorites = [];
+    favorites.forEach((favorite) => allFavorites.push(favoritesApi.delete(favorite.id)));
+    await Promise.all(allFavorites);
   } else {
     await favoritesApi.favorite({ image_id: route.params.id });
   }
   const response = await favoritesApi.findAll();
   favoritesStore.set(response.data);
+  console.log(response.data);
   state.favorite = isFavorited();
 }
 

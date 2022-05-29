@@ -6,13 +6,3 @@ export function formatBreeds (breeds) {
     return 'Unknown';
   }
 }
-
-export function hasVoted (vote) {
-  if (vote === 1) {
-    return 'Upvoted';
-  } else if (vote === 0) {
-    return 'Downvoted';
-  } else {
-    return 'Not Voted';
-  }
-}
