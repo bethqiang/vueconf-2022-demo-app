@@ -39,7 +39,6 @@ async function handlePageChange ({ page }) {
 </script>
 
 <template>
-  <h1 class="mb-12">All Images</h1>
   <LobTable
     class="min-w-full border-b border-gray-100 divide-y divide-gray-100 mb-8"
     space="md"

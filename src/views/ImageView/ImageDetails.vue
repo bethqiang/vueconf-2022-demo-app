@@ -80,7 +80,7 @@ async function handleVote (value) {
 
 <template>
   <template v-if="state.image">
-    <h1 class="mb-12">{{ `Image ${state.image.id}` }}</h1>
+    <h2 class="mb-12">{{ `Image ${state.image.id}` }}</h2>
     <img
       v-if="state.image"
       :src="state.image.url"
