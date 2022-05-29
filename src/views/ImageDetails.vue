@@ -1,10 +1,10 @@
 <script setup>
-import { reactive, onMounted, computed } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import imagesApi from '@/api/images';
 import favoritesApi from '@/api/favorites';
 import votesApi from '@/api/votes';
-import { formatBreeds, voted } from '@/utils';
+import { formatBreeds, hasVoted } from '@/utils';
 import DetailsRow from '@/components/DetailsRow.vue';
 import useFavoritesStore from '@/stores/favorites';
 import useVotesStore from '@/stores/votes';
@@ -13,44 +13,54 @@ const favoritesStore = useFavoritesStore();
 const votesStore = useVotesStore();
 
 const state = reactive({
-  image: null
+  image: null,
+  favorite: false,
+  vote: null
 });
 
 const route = useRoute();
 
+function formatVote () {
+  // every vote is stored (rather than overridden), so only get your most recent one
+  const votes = votesStore.votes.filter(({ image_id }) => image_id === state.image.id);
+  const mostRecentVote = votes[votes.length - 1];
+  if (mostRecentVote.value === 1 || mostRecentVote.value === 0) {
+    return mostRecentVote.value;
+  } else {
+    return null;
+  }
+}
+
+function isFavorited () {
+  // I think this could be a computed value
+  return favoritesStore.favorites.find(({ image_id }) => image_id === state.image.id);
+}
+
 onMounted(async () => {
   const response = await imagesApi.findById(route.params.id);
   state.image = response.data;
-  console.log(favoritesStore._favorites);
-  console.log(votesStore._votes);
-});
-
-const favorite = computed(() => {
-  return state.image?.include_favorite === 1;
-});
-
-const upvoted = computed(() => {
-  return state.image?.include_vote === 1;
-});
-
-const downvoted = computed(() => {
-  return state.image?.include_vote === 0;
+  // even though the API documentation says this info is included in the response ... it's not ...
+  state.favorite = isFavorited();
+  state.vote = formatVote();
 });
 
 async function handleFavorite () {
-  await favoritesApi.favorite({ image_id: route.params.id });
-  const response = await imagesApi.findById(route.params.id);
-  state.image = response.data;
+  const favorited = isFavorited();
+  if (favorited) {
+    // todo: delete
+  } else {
+    await favoritesApi.favorite({ image_id: route.params.id });
+  }
+  const response = await favoritesApi.findAll();
+  favoritesStore.set(response.data);
+  state.favorite = isFavorited();
 }
 
-async function handleUpvote () {
-  await votesApi.vote({ image_id: route.params.id });
-  const response = await imagesApi.findById(route.params.id);
-  state.image = response.data;
-}
-
-function handleDownvote () {
-
+async function handleVote (value) {
+  await votesApi.vote({ image_id: route.params.id, value });
+  const response = await votesApi.findAll();
+  votesStore.set(response.data);
+  state.vote = formatVote();
 }
 </script>
 
@@ -76,14 +86,14 @@ function handleDownvote () {
         label-class="text-gray-500 font-medium text-left text-sm"
       >
         <div class="flex items-center">
-          <NewButton
-            variant="secondary"
-            small
+          <LobButton
+            :variant="state.favorite ? 'error' : 'secondary'"
+            size="small"
             @click="handleFavorite"
           >
-            <Heart :class="['w-6 h-6', { 'text-coral-500': favorite }]"/>
-          </NewButton>
-          <span class="text-sm ml-2">{{ favorite ? 'Favorited' : 'Not Favorited' }}</span>
+            <Heart class="w-6 h-6"/>
+          </LobButton>
+          <span class="text-sm ml-2">{{ state.favorite ? 'Favorited' : 'Not Favorited' }}</span>
         </div>
       </DetailsRow>
       <DetailsRow
@@ -91,23 +101,23 @@ function handleDownvote () {
         label-class="text-gray-500 font-medium text-left text-sm"
       >
         <div class="flex items-center">
-          <NewButton
-            :variant="upvoted ? 'success' : 'secondary'"
-            small
-            @click="handleUpvote"
+          <LobButton
+            :variant="state.vote === 1 ? 'success' : 'secondary'"
+            size="small"
+            @click="() => handleVote(1)"
           >
             <Check class="w-6 h-6"/>
-          </NewButton>
-          <NewButton
-            :variant="downvoted ? 'error' : 'secondary'"
-            small
+          </LobButton>
+          <LobButton
+            :variant="state.vote === 0 ? 'error' : 'secondary'"
+            size="small"
             class="ml-2"
-            @click="handleDownvote"
+            @click="() => handleVote(0)"
           >
             <Close class="w-6 h-6"/>
-          </NewButton>
+          </LobButton>
           <span class="text-sm ml-2">
-            {{ voted() }}
+            {{ hasVoted(state.vote) }}
           </span>
         </div>
       </DetailsRow>

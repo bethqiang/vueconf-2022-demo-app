@@ -7,6 +7,6 @@ export default {
     return await api.get(VOTES_ROOT);
   },
   vote: async function (payload) {
-    return await api.get(VOTES_ROOT, payload);
+    return await api.post(VOTES_ROOT, payload);
   }
 };

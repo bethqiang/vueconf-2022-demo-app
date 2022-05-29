@@ -2,7 +2,7 @@
 import { reactive, onMounted } from 'vue';
 import imagesApi from '@/api/images';
 import { useRouter } from 'vue-router';
-import { formatBreeds, voted } from '@/utils';
+import { formatBreeds, hasVoted } from '@/utils';
 
 // API paging is zero-based but pagination component is one-based, so that's why there's some funky math going on
 
@@ -87,7 +87,7 @@ async function handlePageChange ({ page }) {
             {{ favorited(image.include_favorite) }}
           </div>
           <div class="py-2">
-            {{ voted(image.include_vote) }}
+            {{ hasVoted(image.include_vote) }}
           </div>
           <div class="flex justify-end py-2">
             <ChevronRight

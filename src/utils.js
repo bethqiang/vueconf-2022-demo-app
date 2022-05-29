@@ -7,10 +7,10 @@ export function formatBreeds (breeds) {
   }
 }
 
-export function voted (include_vote) {
-  if (include_vote === 1) {
+export function hasVoted (vote) {
+  if (vote === 1) {
     return 'Upvoted';
-  } else if (include_vote === 0) {
+  } else if (vote === 0) {
     return 'Downvoted';
   } else {
     return 'Not Voted';
