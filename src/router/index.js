@@ -23,13 +23,8 @@ const router = createRouter({
           path: ':id',
           name: 'image details',
           component: () => import('../views/ImageView/ImageDetails.vue')
-        },
+        }
       ]
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue')
     }
   ]
 });

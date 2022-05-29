@@ -5,7 +5,7 @@ import iconFolderSearch from '@/assets/icons/icon-folder-search.png';
 </script>
 
 <template>
-  <nav class="bg-white-100 border-r-2 border-white-300">
+  <nav class="bg-white-100 border-r-2 border-white-300 h-screen">
     <ul>
       <NavItem
         to="/"
