@@ -15,7 +15,7 @@ const votesStore = useVotesStore();
 const state = reactive({
   image: null,
   favorite: false,
-  vote: null
+  vote: undefined
 });
 
 const route = useRoute();
@@ -24,11 +24,7 @@ function formatVote () {
   // every vote is an entry (rather than the previous entry being overridden), so only get your most recent one
   const votes = votesStore.votes.filter(({ image_id }) => image_id === state.image.id);
   const mostRecentVote = votes[votes.length - 1];
-  if (mostRecentVote.value === 1 || mostRecentVote.value === 0) {
-    return mostRecentVote.value;
-  } else {
-    return null;
-  }
+  return mostRecentVote?.value;
 }
 
 function hasVoted (vote) {
@@ -54,19 +50,22 @@ onMounted(async () => {
 });
 
 async function handleFavorite () {
-  const favorited = isFavorited();
-  if (favorited) {
-    // it's possible to have multiple favorite entries on the same photo... so that's fun...
-    const favorites = favoritesStore.favorites.filter(({ image_id }) => image_id === state.image.id);
-    const allFavorites = [];
-    favorites.forEach((favorite) => allFavorites.push(favoritesApi.delete(favorite.id)));
-    await Promise.all(allFavorites);
-  } else {
-    await favoritesApi.favorite({ image_id: route.params.id });
-  }
+  await favoritesApi.favorite({ image_id: route.params.id });
+  updateFavorites();
+}
+
+async function handleDeleteFavorite () {
+  // it's possible to have multiple favorite entries on the same photo... so that's fun...
+  const favorites = favoritesStore.favorites.filter(({ image_id }) => image_id === state.image.id);
+  const allFavorites = [];
+  favorites.forEach((favorite) => allFavorites.push(favoritesApi.delete(favorite.id)));
+  await Promise.all(allFavorites);
+  updateFavorites();
+}
+
+async function updateFavorites () {
   const response = await favoritesApi.findAll();
   favoritesStore.set(response.data);
-  console.log(response.data);
   state.favorite = isFavorited();
 }
 
@@ -106,6 +105,15 @@ async function handleVote (value) {
             @click="handleFavorite"
           >
             <Heart class="w-6 h-6"/>
+          </LobButton>
+          <LobButton
+            variant="secondary"
+            size="small"
+            class="ml-2"
+            :disabled="!state.favorite"
+            @click="handleDeleteFavorite"
+          >
+            <Trash class="w-6 h-6"/>
           </LobButton>
           <span class="text-sm ml-2">{{ state.favorite ? 'Favorited' : 'Not Favorited' }}</span>
         </div>
