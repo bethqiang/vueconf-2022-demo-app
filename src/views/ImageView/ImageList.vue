@@ -11,6 +11,7 @@ const PAGE_SIZE = 10;
 const router = useRouter();
 
 const state = reactive({
+  loading: true,
   images: [],
   count: 0,
   currentPage: 1
@@ -22,9 +23,15 @@ const INITIAL_PARAMS = {
 };
 
 onMounted(async () => {
-  const response = await imagesApi.findAll({ ...INITIAL_PARAMS, page: 0 });
-  state.images = response.data;
-  state.count = response.count;
+  try {
+    const response = await imagesApi.findAll({ ...INITIAL_PARAMS, page: 0 });
+    state.images = response.data;
+    state.count = response.count;
+  } catch (err) {
+    // do something
+  } finally {
+    state.loading = false;
+  }
 });
 
 function goToDetails (id) {
@@ -32,55 +39,66 @@ function goToDetails (id) {
 }
 
 async function handlePageChange ({ page }) {
+  state.loading = true;
   state.currentPage = page;
-  const response = await imagesApi.findAll({ ...INITIAL_PARAMS, page: state.currentPage - 1 });
-  state.images = response.data;
+  try {
+    const response = await imagesApi.findAll({ ...INITIAL_PARAMS, page: state.currentPage - 1 });
+    state.images = response.data;
+  } catch (err) {
+    // do something
+  } finally {
+    state.loading = false;
+  }
 }
 </script>
 
 <template>
-  <LobTable
-    class="min-w-full border-b border-gray-100 divide-y divide-gray-100 mb-8"
-    space="md"
-  >
-    <TableHeader class="text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-      <div class="w-4">
-        Thumbnail
-      </div>
-      <div>
-        Breed
-      </div>
-    </TableHeader>
-    <TableBody>
-      <template
-        v-for="image in state.images"
-        :key="image.id"
+  <LoadingIndicator>
+    <template v-if="!state.loading">
+      <LobTable
+        class="min-w-full border-b border-gray-100 divide-y divide-gray-100 mb-8"
+        space="md"
       >
-        <TableRow
-          class="hover:shadow rounded-md cursor-pointer border-b-white-300 border-b last:border-0 hover:text-black text-sm"
-          @click="goToDetails(image.id)"
-        >
+        <TableHeader class="text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+          <div class="w-4">
+            Thumbnail
+          </div>
           <div>
-            <img :src="image.url" class="h-20" />
+            Breed
           </div>
-          <div class="max-w-xs py-2 truncate fs-exclude">
-            {{ formatBreeds(image.breeds) }}
-          </div>
-          <div class="flex justify-end py-2">
-            <ChevronRight
-              class="w-4 h-4"
-            />
-          </div>
-        </TableRow>
-      </template>
-    </TableBody>
-  </LobTable>
-  <Pagination
-    v-if="state.images.length"
-    :collection="state.images"
-    :page="state.currentPage"
-    :limit="PAGE_SIZE"
-    :total="Number(state.count)"
-    @change="handlePageChange"
-  />
+        </TableHeader>
+        <TableBody>
+          <template
+            v-for="image in state.images"
+            :key="image.id"
+          >
+            <TableRow
+              class="hover:shadow rounded-md cursor-pointer border-b-white-300 border-b last:border-0 hover:text-black text-sm"
+              @click="goToDetails(image.id)"
+            >
+              <div>
+                <img :src="image.url" class="h-20" />
+              </div>
+              <div class="max-w-xs py-2 truncate fs-exclude">
+                {{ formatBreeds(image.breeds) }}
+              </div>
+              <div class="flex justify-end py-2">
+                <ChevronRight
+                  class="w-4 h-4"
+                />
+              </div>
+            </TableRow>
+          </template>
+        </TableBody>
+      </LobTable>
+      <Pagination
+        v-if="state.images.length"
+        :collection="state.images"
+        :page="state.currentPage"
+        :limit="PAGE_SIZE"
+        :total="Number(state.count)"
+        @change="handlePageChange"
+      />
+    </template>
+  </LoadingIndicator>
 </template>
