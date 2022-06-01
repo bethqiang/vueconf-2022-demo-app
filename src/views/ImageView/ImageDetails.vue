@@ -14,6 +14,7 @@ const votesStore = useVotesStore();
 
 const state = reactive({
   loading: true,
+  error: null,
   image: null,
   favorite: false,
   vote: undefined,
@@ -50,7 +51,7 @@ onMounted(async () => {
     state.favorite = isFavorited();
     state.vote = formatVote();
   } catch (err) {
-    // do something
+    state.error = err.message;
   } finally {
     state.loading = false;
   }
@@ -86,75 +87,83 @@ async function handleVote (value) {
 
 <template>
   <LoadingIndicator>
-    <div
-      v-if="state.image && !state.loading"
-      class="flex flex-col items-center"
-    >
-      <h2 class="mb-12">{{ `Image ${state.image.id}` }}</h2>
-      <img
+    <template v-if="!state.loading">
+      <Alert
+        v-if="state.error"
+        variant="error"
+      >
+        {{ state.error}}
+      </Alert>
+      <div
         v-if="state.image"
-        :src="state.image.url"
-        class="h-96"
-      />
-      <Card class="w-[500px] mt-8">
-        <DetailsRow
-          label="Breeds"
-          label-class="text-gray-500 font-medium text-left text-sm my-2"
-        >
-          <span class="text-sm">
-            {{ formatBreeds(state.image.breeds) }}
-          </span>
-        </DetailsRow>
-        <DetailsRow
-          label="Favorite"
-          label-class="text-gray-500 font-medium text-left text-sm"
-        >
-          <div class="flex items-center">
-            <LobButton
-              :variant="state.favorite ? 'error' : 'secondary'"
-              size="small"
-              @click="handleFavorite"
-            >
-              <Heart class="w-6 h-6"/>
-            </LobButton>
-            <LobButton
-              variant="secondary"
-              size="small"
-              class="ml-2"
-              :disabled="!state.favorite"
-              @click="handleDeleteFavorite"
-            >
-              <Trash class="w-6 h-6"/>
-            </LobButton>
-            <span class="text-sm ml-2">{{ state.favorite ? 'Favorited' : 'Not Favorited' }}</span>
-          </div>
-        </DetailsRow>
-        <DetailsRow
-          label="Vote"
-          label-class="text-gray-500 font-medium text-left text-sm"
-        >
-          <div class="flex items-center">
-            <LobButton
-              :variant="state.vote === 1 ? 'success' : 'secondary'"
-              size="small"
-              @click="() => handleVote(1)"
-            >
-              <Check class="w-6 h-6"/>
-            </LobButton>
-            <LobButton
-              :variant="state.vote === 0 ? 'error' : 'secondary'"
-              size="small"
-              class="ml-2"
-              @click="() => handleVote(0)"
-            >
-              <Close class="w-6 h-6"/>
-            </LobButton>
-            <span class="text-sm ml-2">
-              {{ hasVoted(state.vote) }}
+        class="flex flex-col items-center"
+      >
+        <h2 class="mb-12">{{ `Image ${state.image.id}` }}</h2>
+        <img
+          v-if="state.image"
+          :src="state.image.url"
+          class="h-96"
+        />
+        <Card class="w-[500px] mt-8">
+          <DetailsRow
+            label="Breeds"
+            label-class="text-gray-500 font-medium text-left text-sm my-2"
+          >
+            <span class="text-sm">
+              {{ formatBreeds(state.image.breeds) }}
             </span>
-          </div>
-        </DetailsRow>
-      </Card>
-    </div>
+          </DetailsRow>
+          <DetailsRow
+            label="Favorite"
+            label-class="text-gray-500 font-medium text-left text-sm"
+          >
+            <div class="flex items-center">
+              <LobButton
+                :variant="state.favorite ? 'error' : 'secondary'"
+                size="small"
+                @click="handleFavorite"
+              >
+                <Heart class="w-6 h-6"/>
+              </LobButton>
+              <LobButton
+                variant="secondary"
+                size="small"
+                class="ml-2"
+                :disabled="!state.favorite"
+                @click="handleDeleteFavorite"
+              >
+                <Trash class="w-6 h-6"/>
+              </LobButton>
+              <span class="text-sm ml-2">{{ state.favorite ? 'Favorited' : 'Not Favorited' }}</span>
+            </div>
+          </DetailsRow>
+          <DetailsRow
+            label="Vote"
+            label-class="text-gray-500 font-medium text-left text-sm"
+          >
+            <div class="flex items-center">
+              <LobButton
+                :variant="state.vote === 1 ? 'success' : 'secondary'"
+                size="small"
+                @click="() => handleVote(1)"
+              >
+                <Check class="w-6 h-6"/>
+              </LobButton>
+              <LobButton
+                :variant="state.vote === 0 ? 'error' : 'secondary'"
+                size="small"
+                class="ml-2"
+                @click="() => handleVote(0)"
+              >
+                <Close class="w-6 h-6"/>
+              </LobButton>
+              <span class="text-sm ml-2">
+                {{ hasVoted(state.vote) }}
+              </span>
+            </div>
+          </DetailsRow>
+        </Card>
+      </div>
+    </template>
   </LoadingIndicator>
 </template>

@@ -13,6 +13,7 @@ const route = useRoute();
 
 const state = reactive({
   loading: true,
+  error: null,
   images: [],
   count: 0,
   currentPage: 1
@@ -37,7 +38,7 @@ onMounted(async () => {
     state.images = response.data;
     state.count = response.count;
   } catch (err) {
-    // do something
+    state.error = err.message;
   } finally {
     state.loading = false;
   }
@@ -65,6 +66,12 @@ async function handlePageChange ({ page }) {
 <template>
   <LoadingIndicator>
     <template v-if="!state.loading">
+      <Alert
+        v-if="state.error"
+        variant="error"
+      >
+        {{ state.error}}
+      </Alert>
       <LobTable
         class="min-w-full border-b border-gray-100 divide-y divide-gray-100 mb-8"
         space="md"
