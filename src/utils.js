@@ -6,3 +6,7 @@ export function formatBreeds (breeds) {
     return 'Unknown';
   }
 }
+
+export function isEmptyObject (object) {
+  return object && object.constructor === Object && Object.keys(object).length === 0;
+}

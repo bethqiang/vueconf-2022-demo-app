@@ -1,14 +1,15 @@
 <script setup>
-import { reactive, onMounted } from 'vue';
+import { reactive, computed, onMounted } from 'vue';
 import imagesApi from '@/api/images';
-import { useRouter } from 'vue-router';
-import { formatBreeds } from '@/utils';
+import { useRouter, useRoute } from 'vue-router';
+import { formatBreeds, isEmptyObject } from '@/utils';
 
 // API paging is zero-based but pagination component is one-based, so that's why there's some funky math going on
 
 const PAGE_SIZE = 10;
 
 const router = useRouter();
+const route = useRoute();
 
 const state = reactive({
   loading: true,
@@ -22,9 +23,17 @@ const INITIAL_PARAMS = {
   order: 'asc'
 };
 
+const routeQuery = computed(() => route.query);
+
 onMounted(async () => {
+  const query = routeQuery.value;
+  let page = 0;
+  if (!isEmptyObject(query) && query.page) {
+    state.currentPage = Number(query.page);
+    page = query.page;
+  }
   try {
-    const response = await imagesApi.findAll({ ...INITIAL_PARAMS, page: 0 });
+    const response = await imagesApi.findAll({ ...INITIAL_PARAMS, page });
     state.images = response.data;
     state.count = response.count;
   } catch (err) {
@@ -42,6 +51,7 @@ async function handlePageChange ({ page }) {
   state.loading = true;
   state.currentPage = page;
   try {
+    router.push(`${route.path}?page=${state.currentPage}`);
     const response = await imagesApi.findAll({ ...INITIAL_PARAMS, page: state.currentPage - 1 });
     state.images = response.data;
   } catch (err) {
