@@ -2,8 +2,7 @@
 import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
 import NavMain from '@/components/NavMain.vue';
-import favoritesApi from '@/api/favorites';
-import votesApi from '@/api/votes';
+import { favoritesApi, votesApi } from '@/api';
 import useFavoritesStore from '@/stores/favorites';
 import useVotesStore from '@/stores/votes';
 

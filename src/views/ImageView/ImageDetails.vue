@@ -1,9 +1,7 @@
 <script setup>
 import { reactive, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import imagesApi from '@/api/images';
-import favoritesApi from '@/api/favorites';
-import votesApi from '@/api/votes';
+import { imagesApi, favoritesApi, votesApi } from '@/api';
 import { formatBreeds } from '@/utils';
 import DetailsRow from '@/components/DetailsRow.vue';
 import useFavoritesStore from '@/stores/favorites';
