@@ -1,3 +1,12 @@
+import { render as VTLRender } from '@testing-library/vue';
+import components from '@lob/ui-components';
+
+export const render = (Component, options = {}) => {
+  const { global = {}, ...otherOptions } = options;
+  const { plugins = [], mocks = {}, ...otherGlobalOptions } = global;
+  return VTLRender(Component, { global: { plugins: [components, ...plugins], mocks: { ...mocks }, ...otherGlobalOptions }, ...otherOptions });
+};
+
 export function formatBreeds (breeds) {
   if (breeds.length) {
     const breedsArr = breeds.map(({ name }) => name);

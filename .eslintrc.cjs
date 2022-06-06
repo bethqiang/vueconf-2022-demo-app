@@ -9,6 +9,9 @@ module.exports = {
     'vue/setup-compiler-macros': true,
     node: true
   },
+  globals: {
+    vi: 'readonly'
+  },
   rules: {
     'quote-props': [2, 'as-needed'],
     quotes: ['error', 'single'],

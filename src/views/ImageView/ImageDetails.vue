@@ -116,12 +116,14 @@ async function handleVote (value) {
             label-class="text-gray-500 font-medium text-left text-sm"
           >
             <div class="flex items-center">
+              <!-- error variant fills red + red border -->
               <LobButton
                 :variant="state.favorite ? 'error' : 'secondary'"
                 size="small"
                 @click="handleFavorite"
               >
                 <Heart class="w-6 h-6"/>
+                <span class="sr-only">Favorite</span>
               </LobButton>
               <LobButton
                 variant="secondary"
@@ -131,6 +133,7 @@ async function handleVote (value) {
                 @click="handleDeleteFavorite"
               >
                 <Trash class="w-6 h-6"/>
+                <span class="sr-only">Delete Favorite</span>
               </LobButton>
               <span class="text-sm ml-2">{{ state.favorite ? 'Favorited' : 'Not Favorited' }}</span>
             </div>
@@ -147,6 +150,7 @@ async function handleVote (value) {
               >
                 <Check class="w-6 h-6"/>
               </LobButton>
+              <!-- error variant fills red + red border -->
               <LobButton
                 :variant="state.vote === 0 ? 'error' : 'secondary'"
                 size="small"
