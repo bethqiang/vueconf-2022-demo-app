@@ -117,11 +117,13 @@ async function handleVote (value) {
           >
             <div class="flex items-center">
               <LobButton
-                :variant="state.favorite ? 'error' : 'secondary'"
+                variant="secondary"
                 size="small"
+                :class="[{ '!text-white !border-coral-700 !bg-coral-700': state.favorite }]"
                 @click="handleFavorite"
               >
                 <Heart class="w-6 h-6"/>
+                <span class="sr-only">Favorite</span>
               </LobButton>
               <LobButton
                 variant="secondary"
@@ -131,6 +133,7 @@ async function handleVote (value) {
                 @click="handleDeleteFavorite"
               >
                 <Trash class="w-6 h-6"/>
+                <span class="sr-only">Delete Favorite</span>
               </LobButton>
               <span class="text-sm ml-2">{{ state.favorite ? 'Favorited' : 'Not Favorited' }}</span>
             </div>
@@ -141,19 +144,22 @@ async function handleVote (value) {
           >
             <div class="flex items-center">
               <LobButton
-                :variant="state.vote === 1 ? 'success' : 'secondary'"
+                variant="secondary"
                 size="small"
+                :class="[{ '!text-white !border-mint-700 !bg-mint-700': state.vote === 1 }]"
                 @click="() => handleVote(1)"
               >
                 <Check class="w-6 h-6"/>
+                <span class="sr-only">Upvote</span>
               </LobButton>
               <LobButton
-                :variant="state.vote === 0 ? 'error' : 'secondary'"
+                variant="secondary"
                 size="small"
-                class="ml-2"
+                :class="['ml-2', { '!text-white !border-lemon-700 !bg-lemon-700': state.vote === 0 }]"
                 @click="() => handleVote(0)"
               >
                 <Close class="w-6 h-6"/>
+                <span class="sr-only">Downvote</span>
               </LobButton>
               <span class="text-sm ml-2">
                 {{ hasVoted(state.vote) }}
