@@ -13,5 +13,16 @@ module.exports = {
     'quote-props': [2, 'as-needed'],
     quotes: ['error', 'single'],
     semi: ['error', 'always']
-  }
+  },
+  overrides: [
+    {
+      files: [
+        '**/__tests__/*.{j,t}s?(x)',
+        '**/tests/unit/**/*.spec.{j,t}s?(x)'
+      ],
+      env: {
+        jest: true
+      }
+    }
+  ]
 };

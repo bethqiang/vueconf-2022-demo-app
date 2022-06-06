@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, computed, onMounted } from 'vue';
-import imagesApi from '@/api/images';
+import { imagesApi } from '@/api';
 import { useRouter, useRoute } from 'vue-router';
 import { formatBreeds, isEmptyObject } from '@/utils';
 
