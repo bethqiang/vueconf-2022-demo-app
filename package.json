@@ -16,6 +16,10 @@
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
+    "@pinia/testing": "^0.0.12",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/user-event": "^14.2.0",
+    "@testing-library/vue": "^6.5.1",
     "@vitejs/plugin-vue": "^2.3.1",
     "@vue/test-utils": "^2.0.0-rc.20",
     "autoprefixer": "^10.4.7",
@@ -27,6 +31,6 @@
     "tailwind-plugin-lob": "^0.0.27",
     "tailwindcss": "^3.0.24",
     "vite": "^2.9.5",
-    "vitest": "^0.9.3"
+    "vitest": "^0.12.9"
   }
 }
