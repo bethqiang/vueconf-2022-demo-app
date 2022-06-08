@@ -4,19 +4,21 @@ describe('ImageList', () => {
   });
 
   describe('when data has been loaded successfully', () => {
-    it('renders a header', () => {});
-
-    describe('table', () => {
-      it('renders a header row', () => {});
   
-      describe('table row', () => {
-        it('renders one for each dog returned from the API', () => {});
-        it('renders an image', () => {});
-        it('renders the breed', () => {});
-        
-        describe('when clicked', () => {
-          it('goes to the details page', () => {});
-        });
+    describe('table row', () => {
+      it('renders one for each dog returned from the API and the header row', () => {});
+      it('renders an image', () => {});
+
+      describe('if there are breeds', () => {
+        it('renders the breeds', () => {});
+      });
+  
+      describe('if there are no breeds', () => {
+        it('renders \'Unknown\'', () => {});
+      });
+      
+      describe('when clicked', () => {
+        it('goes to the details page', () => {});
       });
     });
   

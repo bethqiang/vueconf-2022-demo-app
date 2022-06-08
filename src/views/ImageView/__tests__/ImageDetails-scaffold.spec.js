@@ -6,7 +6,14 @@ describe('ImageDetails', () => {
   describe('when data has been loaded successfully', () => {
     it('renders a heading with the image ID', () => {});
     it('renders the image', () => {});
-    it('renders the breeds', () => {});
+
+    describe('if there are breeds', () => {
+      it('renders the breeds', () => {});
+    });
+
+    describe('if there are no breeds', () => {
+      it('renders \'Unknown\'', () => {});
+    });
   
     describe('favorite section', () => {
       it('renders a favorite button', () => {});
