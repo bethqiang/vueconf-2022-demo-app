@@ -52,11 +52,15 @@ async function handlePageChange ({ page }) {
   state.loading = true;
   state.currentPage = page;
   try {
-    router.push(`${route.path}?page=${state.currentPage}`);
+    if (state.currentPage === 1) {
+      router.push(`${route.path}`);
+    } else {
+      router.push(`${route.path}?page=${state.currentPage}`);
+    }
     const response = await imagesApi.findAll({ ...INITIAL_PARAMS, page: state.currentPage - 1 });
     state.images = response.data;
   } catch (err) {
-    // do something
+    state.error = err.message;
   } finally {
     state.loading = false;
   }
@@ -91,6 +95,7 @@ async function handlePageChange ({ page }) {
           >
             <TableRow
               class="hover:shadow rounded-md cursor-pointer border-b-white-300 border-b last:border-0 hover:text-black text-sm"
+              :data-testId="`row-${image.id}`"
               @click="goToDetails(image.id)"
             >
               <div>

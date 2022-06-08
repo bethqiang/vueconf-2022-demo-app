@@ -8,7 +8,7 @@ export function render (Component, options = {}) {
 }
 
 export function formatBreeds (breeds) {
-  if (breeds.length) {
+  if (breeds?.length) {
     const breedsArr = breeds.map(({ name }) => name);
     return breedsArr.join(', ');
   } else {
